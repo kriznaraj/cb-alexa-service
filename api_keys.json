@@ -1,0 +1,26 @@
+[{
+    "site_name":"jerseydairy-test",
+    "merchant":"jerseydairy",
+    "api_key":"test_lISPs3ZaeCIi2rUt0uSgaKd1uzcmGE8p",
+    "category":"milk"
+},{
+    "site_name":"wheelsrental-test",
+    "merchant":"wheelsrental",
+    "api_key":"test_8tXaf7wKl6YhVrQeuvJhdZLQk3ikSHzD",
+    "category":"vehiclerental"
+},{
+    "site_name":"healthiswealth-test",
+    "merchant":"healthiswealth",
+    "api_key":"test_v5luboWSJsbrvHD9m2y5sKjt1SHM8WRs",
+    "category":"Medicine"
+},{
+    "site_name":"expass-test",
+    "merchant":"site",
+    "api_key":"test_0cDB7STUDcZcDRoHew50OvWjEZ1UXgwJ",
+    "category":"gym"
+},{ 
+    "site_name":"aavin-test",
+    "merchant":"aavin",
+    "api_key":"test_3p7ZtrSTbSR7xAuS1XbpA17zTHvZJcLG",
+    "category":"milk"
+}]

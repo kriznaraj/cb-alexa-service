@@ -1,0 +1,17 @@
+{
+  "development": {
+    "dialect": "sqlite",
+    "storage": "./database.sqlite3",
+    "transactionType": "IMMEDIATE"
+  },
+  "test": {
+    "dialect": "sqlite",
+    "storage": ":memory",
+    "transactionType": "IMMEDIATE"
+  },
+  "production": {
+    "dialect": "sqlite",
+    "storage": "./database.sqlite3",
+    "transactionType": "IMMEDIATE"
+  }
+}

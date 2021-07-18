@@ -1,0 +1,454 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is api spec for Chargebee for Alexa. You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
+    "version": "1.0.3",
+    "title": "Chargebee for Alexa",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "a5164bfb.ngrok.io",
+  "basePath": "/api",
+  "tags": [{
+    "name": "subscriptions",
+    "description": "Apis for Chargebee subscriptions",
+    "externalDocs": {
+      "description": "Find out more",
+      "url": "http://chargebee.com/docs"
+    }
+  }, {
+    "name": "plans",
+    "description": "Apis to Chargebee plans"
+  }, {
+    "name": "categories",
+    "description": "Operations about categories"
+  }, {
+    "name":"merchants",
+    "description": "Operations on merchants"
+  }],
+  "schemes": ["https", "http"],
+  "paths": {
+    "/subscriptions/": {
+      "get": {
+        "tags": ["subscriptions"],
+        "summary": "Find subscription for the user",
+        "description": "Returns list of subscriptions",
+        "operationId": "findSubscription",
+        "produces": ["application/json"],
+        "parameters": [{
+          "name": "category",
+          "in": "path",
+          "description": "Filter by category",
+          "required": true,
+          "type": "string",
+          "format": "int64"
+        }],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Subscription"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Subscription not found"
+          }
+        },
+        "security": [{
+          "chargebee_auth": ["read:subscriptions"]
+        }]
+      },
+      "post": {
+        "tags": ["subscriptions"],
+        "summary": "Create a subscription in Chargebee with form data",
+        "description": "",
+        "operationId": "createSubscription",
+        "consumes": ["application/x-www-form-urlencoded"],
+        "produces": ["application/json", "application/xml"],
+        "parameters": [{
+          "name": "plan_id",
+          "in": "path",
+          "description": "ID of plan to create subscriptions",
+          "required": true,
+          "type": "integer",
+          "format": "int64"
+        }, {
+          "name": "merchant_id",
+          "in": "formData",
+          "description": "Merchant id for which subscriptions has to be created",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+           "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Subscription"
+            }
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [{
+          "chargebee_auth": ["write:subscriptions"]
+        }]
+      },
+      "delete": {
+        "tags": ["subscriptions"],
+        "summary": "Cancel a subscription",
+        "description": "",
+        "operationId": "cancelSubscription",
+        "produces": ["application/json", "application/xml"],
+        "parameters": [{
+          "name": "id",
+          "in": "header",
+          "description": "subscription id to be cancelled",
+          "required": false,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Subscription not found"
+          }
+        },
+        "security": [{
+          "chargebee_auth": ["write:subscriptions"]
+        }]
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": ["categories"],
+        "summary": "Get existing categories",
+        "description": "Get existing categories",
+        "operationId": "getCategories",
+        "consumes": ["application/json", "application/xml"],
+        "produces": ["application/json", "application/xml"],
+        "responses": {
+          "200": {
+            "description": "successful",
+            "schema": {
+              "$ref": "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security": [{
+          "chargebee_auth": ["read:category"]
+        }]
+      }
+    },
+    "/merchants": {
+      "get": {
+        "tags": ["merchants"],
+        "summary": "Finds merchants by category",
+        "description": "Finds merchants by category",
+        "operationId": "findMerchantsByCategory",
+        "produces": ["application/json", "application/xml"],
+        "parameters": [{
+          "name": "category",
+          "in": "query",
+          "description": "Category value that need to be considered for filter",
+          "required": true,
+          "type": "string",
+        }],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Merchant"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value"
+          }
+        },
+        "security": [{
+          "chargebee_auth": ["read:merchants"]
+        }]
+      }
+    },
+    "/plans": {
+      "get": {
+        "tags": ["plans"],
+        "summary": "Returns plans by category",
+        "description": "Returns plans which match the category specified",
+        "operationId": "getPlans",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        },
+        "security": [{
+          "api_key": []
+        }]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    },
+    "chargebee_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://localhost:3456/oauth/authorize",
+      "flow": "implicit",
+      "scopes": {
+        "read:merchants": "read merchants",
+        "read:categories": "read categories",
+        "read:subscriptions": "read subscriptions",
+        "write:subscriptions": "update subscriptions",
+        "read:pets": "read your pets",
+        "write:pets": "modify pets in your account"
+      }
+    }
+  },
+  "definitions": {
+    "Subscription": { 
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "cb_customer_id": {
+          "type": "string",
+          "format": "int64"
+        },
+        "cb_subscription_id": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+         "category_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "Category":{
+          "$ref": "#/definitions/Category"
+        },
+         "merchant_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "Merchant":{
+          "$ref": "#/definitions/Merchant"
+        },
+         "plan_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "Plan":{
+          "$ref": "#/definitions/Plan"
+        },
+        "user_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "User":{
+          "$ref": "#/definitions/User"
+        }
+
+      },
+      "xml": {
+        "name": "Subscription"
+      }
+    },
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string",
+          "format": "int64"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "xml": {
+        "name": "Category"
+      }
+    },
+    "Merchant": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string",
+          "format": "int64"
+        },
+        "site_name": {
+          "type": "string",
+        },
+        "lat": {
+          "type": "string",
+          "format": "double64"
+        },
+        "long": {
+          "type": "string",
+          "format": "double64"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "category_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "Category":{
+          "$ref": "#/definitions/Category"
+        }
+      },
+      "xml": {
+        "name": "Merchant"
+      }
+    },
+    "Plan": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string",
+          "format": "int64"
+        },
+        "plan_chargebee_id": {
+          "type": "string",
+        },
+        "price": {
+          "type": "number"
+        },
+        "frequency": {
+          "type": "number"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "merchant_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "category_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "Category":{
+          "$ref": "#/definitions/Category"
+        }
+      },
+      "xml": {
+        "name": "Plan"
+      }
+    },
+    "User": {
+
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "token": {
+          "type": "string"
+        },
+         "lat": {
+          "type": "string",
+          "format": "double64"
+        },
+        "long": {
+          "type": "string",
+          "format": "double64"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "xml": {
+        "name": "User"
+      }
+
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}

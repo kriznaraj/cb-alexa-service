@@ -1,0 +1,17 @@
+head
+    style
+        include ../stylesheets/bootstrap.min.css
+table.table.table-condensed
+    thead
+        tr
+            th Merchant
+            th Category
+            th Count
+        tbody
+            each stat in stats
+                tr
+                    td #{stat.name}
+                    td #{stat.category}
+                    td #{stat.count}
+            else
+                li There are no no stats yet.
